@@ -83,7 +83,9 @@ The bundle authors have thankfully addressed this issue by implementing a `rever
 You can of course still set, max-age, or s-max-age headers. In fact a common strategy recommended is to set the `max-age` header to a shorter length such as 500, and then the `reverse_proxy_ttl` to a longer length such as 86400. This allows the users browser to cache the request during the short term, but then allow the Symfony cache to persist longer. Remember we can't directly control the users browser cache. We can however, control and invalidate the Symfony gateway cache at will.
 
 **Issues I Addressed**:  
-A major issue that I ran into the bundle, was disabling the cache during development. The cache is typically enabled like so, within `public/index.php`:
+A major issue that I encountered with the bundle was disabling the http cache during development. Even when disabling the http cache the 'normal' way, Symfony was still picking up the `fos_http_cache.yaml` bundle congiguration and somehow implementing certain cache features.
+
+Here is the standard way the bundle recommends implementing the http cache:  
 
 ```php
 // /public/index.php
@@ -113,7 +115,27 @@ class Kernel extends BaseKernel implements HttpCacheProvider {
   }
 ```
 
-My implementation is slightly different. It allows for an `APP_CACHE` environment variable to disable the cache. However, even when the cache was supposed to be disabled, Symfony was still picking up the `fos_http_cache.yaml` bundle congiguration and implementing some cache features. After a lot of trial and error I decided the cleanest way of doing this, was to simply remove `fos_http_cache.yaml` from `/config/packages/fos_http_cache.yaml` and move it to `/config/http_cache/fos_http_cache.yaml`. Then in `/src/Kernel.php` I made the following additions..
+To fix this, I decided to..
+
+1. implement an `APP_CACHE` environment variable. When set to false, the http cache disables.
+2. Remove `fos_http_cache.yaml` from `/config/packages/fos_http_cache.yaml` and move it to `/config/http_cache/fos_http_cache.yaml`.
+3. In `/src/Kernel.php` and `/public/index.php` I made the following additions..
+
+```php
+// /public/index.php
+
+// ...
+
+$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG'], (bool) $_SERVER['APP_CACHE']);
+
+if ($_SERVER['APP_CACHE']) {
+  $kernel = $kernel->getHttpCache();
+}
+
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
+// ...
+```
 
 ```php
 // /src/Kernel.php
