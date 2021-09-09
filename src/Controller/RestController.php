@@ -74,6 +74,9 @@ class RestController extends AbstractFOSRestController {
 	 */
 	public function post(string $resource, Request $request): View {
 		$args = $request->request->all();
+		if (!$args) {
+			$args = (array) json_decode($request->getContent());
+		}
 		$entity = new $resource();
 		$hydrator = HydratorFactory::factory($resource);
 		$hydrator->hydrate($args, $entity);
@@ -98,6 +101,9 @@ class RestController extends AbstractFOSRestController {
 			throw new ResourceNotFoundException($resource, $id);
 		}
 		$args = $request->request->all();
+		if (!$args) {
+			$args = (array) json_decode($request->getContent());
+		}
 		$hydrator = HydratorFactory::factory($resource);
 		$hydrator->hydrate($args, $entity);
 		$this->manager->flush();

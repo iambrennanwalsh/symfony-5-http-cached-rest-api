@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
 class ApiTokenAuthenticator extends AbstractAuthenticator {
 	private $entityManager;
@@ -32,7 +33,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator {
 				->getRepository(User::class)
 				->findOneBy(['apiToken' => $apiToken]);
 			if ($user) {
-				return new SelfValidatingPassport($user);
+				return new SelfValidatingPassport(new UserBadge($user->getEmail()), []);
 			}
 		}
 		throw new CustomUserMessageAuthenticationException(

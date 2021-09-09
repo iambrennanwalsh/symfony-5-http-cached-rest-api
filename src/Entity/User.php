@@ -134,6 +134,10 @@ class User extends BaseEntity implements UserInterface {
 		return $this->email;
 	}
 
+	public function getUserIdentifier() {
+		return $this->email;
+	}
+
 	public function getSalt() {
 	}
 
