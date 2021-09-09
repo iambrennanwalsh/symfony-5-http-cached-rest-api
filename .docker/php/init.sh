@@ -9,9 +9,14 @@ php-fpm &
 # Install composer dependencies.
 composer install
 
-# Wait for postgresql to become available then run migrations.
-wait-for-it db:5432 -- php bin/console doctrine:migrations:migrate 
+# Wait for postgresql to become available then setup the database.
+if [[ "$APP_ENV" == "dev" ]]; then
+  wait-for-it postgres:5432 -- \
+    php bin/console doctrine:schema:drop --force && \
+    php bin/console doctrine:schema:update --force && \
+    php bin/console hautelook:fixtures:load --no-interaction
+fi 
 
-# When `composer install` completes, move the php-fpm process back into the foreground.
+# Move the php-fpm process back into the foreground.
 fg %1
 

@@ -4,10 +4,10 @@ services:
   postgres:
     env_file:
       - .env
-    hostname: db
+    hostname: postgres
     image: postgres:13.1-alpine
     ports:
-      - 5432:5432
+      - 5432:${POSTGRES_PORT:-5432}
     restart: unless-stopped
     volumes:
       - PostgresData:/var/lib/postgresql/data

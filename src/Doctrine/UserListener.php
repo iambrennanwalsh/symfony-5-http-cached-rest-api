@@ -5,19 +5,19 @@ namespace App\Doctrine;
 use Doctrine\ORM\Mapping as Orm;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\User;
 use App\Factory\TokenFactory;
 
 class UserListener {
-	/** @var UserPasswordEncoderInterface */
-	private $encoder;
+	/** @var UserPasswordHasherInterface */
+	private $hasher;
 
 	/**
-	 * @param UserPasswordEncoderInterface $encoder
+	 * @param UserPasswordHasherInterface $encoder
 	 */
-	public function __construct(UserPasswordEncoderInterface $encoder) {
-		$this->encoder = $encoder;
+	public function __construct(UserPasswordHasherInterface $hasher) {
+		$this->hasher = $hasher;
 	}
 
 	/** @Orm\PrePersist */
@@ -42,6 +42,6 @@ class UserListener {
 	}
 
 	private function encodePassword(User $user, string $password) {
-		return $this->encoder->encodePassword($user, $password);
+		return $this->hasher->hashPassword($user, $password);
 	}
 }
