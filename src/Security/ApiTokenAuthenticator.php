@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\Users;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +29,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator {
 		$apiToken = $request->headers->get('X-AUTH-TOKEN');
 		if ($apiToken) {
 			$user = $this->entityManager
-				->getRepository(Users::class)
+				->getRepository(User::class)
 				->findOneBy(['apiToken' => $apiToken]);
 			if ($user) {
 				return new SelfValidatingPassport($user);

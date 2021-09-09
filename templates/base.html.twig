@@ -8,6 +8,15 @@
   <body>
     {% block body %}
       <h1>Symfony 5 HTTP Cached Rest API</h1>
+      <p>Open up your developer console and then visit the api route. The first visit won't be cached as indicated by a 200 response code. Refresh and you'll recieve the cached 304 response.</p>
+      <ul>
+        <li><a href='/api/user'>Users Resource</a></li>
+        <li><a href='/api/category'>Category Resource</a></li>
+        <li><a href='/api/tag'>Tag Resource</a></li>
+        <li><a href='/api/article'>Article Resource</a></li>
+        <li><a href='/api/project-category'>Project Category Resource</a></li>
+        <li><a href='/api/project'>Project Resource</a></li>
+      </ul>
     {% endblock %}
   </body>
 </html>
