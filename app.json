@@ -1,0 +1,9 @@
+{
+	"name": "symfony-5-cached-rest-api",
+	"description": "An example of implementing an http cached rest api in Symfony 5.",
+	"buildpacks": [
+		{
+			"url": "heroku/php"
+		}
+	]
+}
