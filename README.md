@@ -1,6 +1,8 @@
 # Symfony 5 HTTP Cached Rest Api
 
-This app implements an HTTP cached REST api with api key based security in Symfony. It utilizes and properly configures, the following bundles...
+This app implements an HTTP cached REST api with api key based security in Symfony. Be sure to checkout the published heroku app [https://symfony-5-http-cached-rest-api.herokuapp.com/api/project-category](https://symfony-5-http-cached-rest-api.herokuapp.com/api/project-category) to see it working in action! 
+
+The app utilizes and properly configures, the following bundles...
 
 - FOSHttpCacheBundle
 - FOSRestBundle
@@ -23,6 +25,7 @@ Caddy provides automatic HTTPS, and will expose the app at port 443 via the doma
 - Docker implementation includes PHP FPM, PostgreSQL, and Caddy server.
 - Fully function REST API with `GET`, `GET all`, `POST`, `PUT`, and `DELETE` functionality.
 - API key based authentication for `POST`, `PUT`, and `DELETE` requests.
+- Automatic invalidation of url's upon `POST`, `PUT` and `DELETE` requests.
 - Sensitive information scrubbing at serialization (such as User passwords, and api keys).
 - Automatic association resolving (Associated entities will be included in json). 
 - Sort, limit, and offset results of `GET all` requests.
@@ -76,11 +79,11 @@ I've chosen to implement the Symfony based HTTP cache. That being said, Varnish 
 **A note on expiration**:  
 Typically when configuring expiration headers, we use the `max-age` or `s-max-age` headers. The `max-age` header is honored by the browser when it caches requests. The `s-max-age` is used by reverse proxies such as Nginx, as well as cdn's like Cloudflare.
 
-However this leads to a problem when using Symfony as a gateway cache. If I configure the Symfony gateway cache to cache an endpoint for 86400 seconds, I only want the Symfony cache to do so and not any other cache implementations that may recieve the request before Symfony does. Such as an Nginx reverse proxy if it were implemented.
+However this leads to a problem when using Symfony as a gateway cache. If I configure the Symfony gateway cache to cache an endpoint for 86400 seconds, I only want the Symfony cache to do so and not another cache implementation that may recieve the request before Symfony does. Such as an Nginx reverse proxy.
 
 The bundle authors have thankfully addressed this issue by implementing a `reverse_proxy_ttl` header that only the Symfony gateway cache honors. 
 
-You can of course still set, max-age, or s-max-age headers. In fact a common strategy recommended is to set the `max-age` header to a shorter length such as 500, and then the `reverse_proxy_ttl` to a longer length such as 86400. This allows the users browser to cache the request during the short term, but then allow the Symfony cache to persist longer. Remember we can't directly control the users browser cache. We can however, control and invalidate the Symfony gateway cache at will.
+You can of course still set, max-age, or s-max-age headers. In fact a common strategy recommended is to set the `max-age` header to a shorter length such as 500, and then the `reverse_proxy_ttl` to a longer length such as 86400. The `max-age` header allows the users own browser to cache the request during the short term and not any other cache implementations. And then the `reverse_proxy_ttl` directs the Symfony caches ttl which will be served to everyone. Remember we can't directly control the users browser cache. We can however, control and invalidate the Symfony gateway cache at will.
 
 **Issues I Addressed**:  
 A major issue that I encountered with the bundle was disabling the http cache during development. Even when disabling the http cache the 'normal' way, Symfony was still picking up the `fos_http_cache.yaml` bundle congiguration and somehow implementing certain cache features.
