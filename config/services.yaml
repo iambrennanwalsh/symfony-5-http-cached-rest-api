@@ -1,0 +1,29 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/Kernel.php'
+      - '../src/Tests/'
+
+  App\Controller\:
+    resource: '../src/Controller/'
+    tags: ['controller.service_arguments']
+
+  App\Doctrine\:
+    resource: '../src/Doctrine/'
+    tags: ['doctrine.orm.entity_listener']
+
+  App\EventListener\:
+    resource: '../src/EventListener/'
+    tags: ['kernel.event_listener']
+
+  App\EventListener\ResourceResolvingListener:
+    class: 'App\EventListener\ResourceResolvingListener'
+    tags:
+      - {name: kernel.event_listener, priority: 1}

@@ -1,0 +1,13 @@
+App\Entity\Project:
+  project_{1..9}:
+    title: <sentence()>
+    slug:
+      <(strtolower(rtrim(preg_replace('/[^A-Za-z0-9-]/', '-', $title), '-')))>
+    summary: <text(100)>
+    image: '/images/fixture/fixture_<current()>.jpg'
+    markdown: >
+      <identity("## ")><sentence(3, true)><identity(" \n")> <identity("###
+      ")><sentence(3, true)><identity(" \n")>  <paragraph(3, true)><identity("
+      \n\n")> <paragraph(3, true)><identity(" \n\n")>  <paragraph(3,
+      true)><identity(" \n\n")>
+    category: '50%? @project_category_current : @project_category_past'

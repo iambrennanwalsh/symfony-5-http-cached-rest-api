@@ -1,0 +1,5 @@
+App\Entity\ProjectCategory:
+  project_category_{current, past}:
+    name: '<( ucfirst($current) )>'
+    slug:
+      <(strtolower(rtrim(preg_replace('/[^A-Za-z0-9-]/', '-', $name), '-')))>

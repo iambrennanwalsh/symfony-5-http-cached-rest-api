@@ -1,0 +1,16 @@
+App\Entity\Article:
+  article_{1..30}:
+    title (unique): <sentence()>
+    slug:
+      <(strtolower(rtrim(preg_replace('/[^A-Za-z0-9-]/', '-', $title), '-')))>
+    featured: <boolean()>
+    timestamp: <(new \DateTime() )>
+    image: '/images/fixture/fixture_<current()>.jpg'
+    summary: <text(100)>
+    markdown: >
+      <identity("## ")><sentence(3, true)><identity(" \n")> <identity("###
+      ")><sentence(3, true)><identity(" \n")>  <paragraph(3, true)><identity("
+      \n\n")> <paragraph(3, true)><identity(" \n\n")>  <paragraph(3,
+      true)><identity(" \n\n")>
+    category: '@category_<numberBetween(1, 5)>'
+    tags: ['@tag_<numberBetween(1, 5)>']

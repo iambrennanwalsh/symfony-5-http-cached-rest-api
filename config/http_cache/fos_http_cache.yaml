@@ -1,0 +1,26 @@
+fos_http_cache:
+  proxy_client:
+    symfony:
+      use_kernel_dispatcher: true
+  user_context:
+    enabled: true
+    role_provider: true
+    hash_cache_ttl: 500
+  cache_control:
+    rules:
+      - match:
+          path: ^/api
+        headers:
+          reverse_proxy_ttl: 86400
+          etag: 'weak'
+          cache_control:
+            public: true
+            s_maxage: 0
+  tags:
+    enabled: true
+    rules:
+      - match:
+          attributes: {_controller: ^App\\Controller\\RestController::.*}
+        tags: [api]
+  flash_message:
+    enabled: true

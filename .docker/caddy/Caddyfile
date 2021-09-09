@@ -1,0 +1,17 @@
+{$APP_URL}
+
+root * /var/www/public
+
+file_server
+
+handle /* {
+	php_fastcgi php:9000
+}
+
+tls internal
+
+encode gzip
+
+log {
+	output stdout
+}

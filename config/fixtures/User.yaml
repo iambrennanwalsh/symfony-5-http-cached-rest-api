@@ -1,0 +1,6 @@
+App\Entity\User:
+  user_frodo_baggins:
+    name: 'Frodo Baggins'
+    email: 'frodo@shi.re'
+    password: 'shireHobbit'
+    roles: ['ROLE_USER', 'ROLE_ADMIN']
