@@ -129,7 +129,7 @@ class Project extends BaseEntity {
 		return $this;
 	}
 
-	public function __toString(): ?string {
+	public function __toString(): string {
 		return $this->getTitle();
 	}
 }

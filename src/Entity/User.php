@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as Orm;
 use JMS\Serializer\Annotation as Jms;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use App\Doctrine\UserListener;
 
@@ -18,7 +19,9 @@ use App\Doctrine\UserListener;
  * @Jms\ExclusionPolicy("none")
  * @UniqueEntity("email")
  */
-class User extends BaseEntity implements PasswordAuthenticatedUserInterface {
+class User extends BaseEntity implements
+	UserInterface,
+	PasswordAuthenticatedUserInterface {
 	/**
 	 * @var string
 	 * @Orm\Column(type="string")
@@ -132,5 +135,13 @@ class User extends BaseEntity implements PasswordAuthenticatedUserInterface {
 
 	public function getUserIdentifier() {
 		return $this->email;
+	}
+
+	public function getSalt() {
+	}
+	public function getUsername() {
+		return $this->getUserIdentifier();
+	}
+	public function eraseCredentials() {
 	}
 }

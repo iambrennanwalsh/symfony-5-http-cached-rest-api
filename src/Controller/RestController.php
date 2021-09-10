@@ -8,7 +8,7 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Factory\HydratorFactory;
+use Laminas\Hydrator\ReflectionHydrator;
 use App\Exception\ResourceNotFoundException;
 
 /**
@@ -78,7 +78,7 @@ class RestController extends AbstractFOSRestController {
 			$args = (array) json_decode($request->getContent());
 		}
 		$entity = new $resource();
-		$hydrator = HydratorFactory::factory($resource);
+		$hydrator = new ReflectionHydrator();
 		$hydrator->hydrate($args, $entity);
 		$this->manager->persist($entity);
 		$this->manager->flush();
@@ -104,7 +104,7 @@ class RestController extends AbstractFOSRestController {
 		if (!$args) {
 			$args = (array) json_decode($request->getContent());
 		}
-		$hydrator = HydratorFactory::factory($resource);
+		$hydrator = new ReflectionHydrator();
 		$hydrator->hydrate($args, $entity);
 		$this->manager->flush();
 		return View::create($entity, Response::HTTP_OK);
