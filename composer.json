@@ -33,9 +33,8 @@
 		"doctrine/doctrine-fixtures-bundle": "^3.4",
 		"hautelook/alice-bundle": "^2.8",
 		"symfony/debug-bundle": "5.*",
-		"symfony/maker-bundle": "^1.33",
-		"symfony/stopwatch": "^5.3",
-		"symfony/web-profiler-bundle": "^5.3"
+		"symfony/stopwatch": "5.*",
+		"symfony/web-profiler-bundle": "5.*"
 	},
 	"config": {
 		"optimize-autoloader": true,
