@@ -15,7 +15,7 @@ The app utilizes and properly configures, the following bundles...
 
 The provided Docker Compose configuration simplifies the implemention of the development environment, and will handle starting up the app. The docker environment consists of the following..
 
-- PHP 7.4 FPM
+- PHP 8.0 FPM
 - PostgreSQL 13.1
 - Caddy 2.3.0
 
